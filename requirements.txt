@@ -1,12 +1,27 @@
+# Core dependencies (required)
 deep-translator==1.11.4
 wordfreq==3.1.1
 pyphen==0.14.0
 jieba==0.42.1
 tinysegmenter==0.3
 regex==2024.5.15
-pandas==2.2.2
+
+# Web application dependencies (required)
+flask==3.0.0
+flask-sqlalchemy==3.1.1
+
+# Oxford 3000 batch export
 openpyxl==3.1.2
-tqdm==4.66.4
 
+# Optional features (install separately if needed)
+# Note: pkuseg may fail to build on some systems - jieba works as default
+# pymorphy3
+# sudachipy
+# sudachidict_core
+# pkuseg  # Known build issues - skip if it fails, jieba is the default
+# pythainlp
+# pykakasi
+# hangul-romanize
+# pypinyin
+# spacy
 
- 

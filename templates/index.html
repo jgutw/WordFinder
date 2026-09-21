@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordFinder - Cross-Language Word Discovery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 WordFinder</h1>
+            <p class="subtitle">Discover inner words across 50+ languages</p>
+        </header>
+
+        <main>
+            <div class="search-section">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="wordInput" 
+                        placeholder="Enter an English word or phrase..."
+                        autocomplete="off"
+                    >
+                    <div class="language-selector-wrapper">
+                        <select id="languageSelect" multiple size="7" title="Select languages (up to 20, or leave empty for default)">
+                            <option value="">Loading languages...</option>
+                        </select>
+                        <div class="selector-info">
+                            <div id="selectedCount" class="selected-count"></div>
+                            <small>Hold Cmd/Ctrl to select multiple</small>
+                        </div>
+                    </div>
+                    <button id="searchBtn" onclick="performSearch()">Search</button>
+                </div>
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="showRomanization" checked>
+                        Show Romanization
+                    </label>
+                    <label>
+                        <input type="checkbox" id="enableMorphemes" checked>
+                        Enable Morphemes
+                    </label>
+                    <label>
+                        <input type="checkbox" id="enableLemmatize">
+                        Enable Lemmatization
+                    </label>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Searching across languages...</p>
+            </div>
+
+            <div id="errorMessage" class="error hidden"></div>
+
+            <div id="resultsSection" class="results-section hidden">
+                <div class="results-header">
+                    <h2 id="resultsTitle"></h2>
+                    <button id="clearResults" onclick="clearResults()">Clear</button>
+                </div>
+                <div id="resultsContainer"></div>
+            </div>
+
+            <div class="history-section">
+                <div class="history-header">
+                    <h3>Search History</h3>
+                    <button id="toggleHistory" onclick="toggleHistory()">Show</button>
+                </div>
+                <div id="historyContainer" class="history-container hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        // Ensure languages load even if script loads before DOM
+        window.addEventListener('load', function() {
+            if (typeof loadLanguages === 'function') {
+                loadLanguages();
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -30,7 +30,17 @@ import regex as re
 from deep_translator import GoogleTranslator
 import pyphen
 import jieba
-from tinysegmenter import TinySegmenter
+try:
+    from tinysegmenter import tinysegmenter
+except ImportError:
+    tinysegmenter = None
+try:
+    if tinysegmenter is None:
+        from tinysegmenter import TinySegmenter
+        tinysegmenter = TinySegmenter()
+except (ImportError, AttributeError):
+    tinysegmenter = None
+
 from wordfreq import zipf_frequency
 
 # ---------- Optional Russian morphology ----------
@@ -271,7 +281,13 @@ def heuristic_segments_latin(word: str) -> List[str]:
     segs.append(word[start:])
     return [s for s in segs if s]
 
-SEG_TINY = TinySegmenter()
+# tinysegmenter: support both legacy (tinysegmenter.tokenize) and class-based (TinySegmenter) APIs
+def _tinysegmenter_tokenize(text):
+    if tinysegmenter is None:
+        return list(text)  # fallback: char-by-char
+    if hasattr(tinysegmenter, 'tokenize'):
+        return tinysegmenter.tokenize(text)
+    return tinysegmenter.tokenize(text)  # TinySegmenter instance
 
 # ---------- Romanization ----------
 def romanize_text(text: str, lang: LangConfig) -> str:
@@ -418,7 +434,7 @@ def segment_word(word: str, lang: LangConfig, args=None) -> List[str]:
             segs = [m.surface() for m in _SUDACHI.tokenize(w, _SUDACHI_MODE) if m.surface().strip()]
             return segs or [w]
         # default tinysegmenter
-        segs = [t for t in SEG_TINY.tokenize(w) if t.strip()]
+        segs = [t for t in _tinysegmenter_tokenize(w) if t.strip()]
         return segs or [w]
 
     # TH
